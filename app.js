@@ -1,16 +1,18 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var config = require('config');
+var log = require('libs/log')(module);
 
 var app = express();
-app.set('port', 3000);
+app.set('port', config.get('port'));
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  log.info('Express server listening on port ' + config.get('port'));
 });
 
 app.use(function(req, res, next) {
-  if (req.url =='/') {
+  if (req.url == '/') {
     res.end("Hello");
   } else {
     next();
@@ -18,7 +20,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-  if (req.url =='/forbidden') {
+  if (req.url == '/forbidden') {
     next(new Error("wops, denied"));
   } else {
     next();
@@ -26,7 +28,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-  if (req.url =='/test') {
+  if (req.url == '/test') {
     res.end("Test");
   } else {
     next();
